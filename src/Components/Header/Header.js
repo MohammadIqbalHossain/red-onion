@@ -11,7 +11,7 @@ const Header = () => {
             </div>
             <div className="flex gap-4 items-center">
 
-                <Link className=" text-4xl" to="/cart">
+                <Link className=" text-4xl" to="/banner">
                    <AiOutlineShoppingCart/>
                 </Link>
                 <Link to='/login '>Login</Link>
