@@ -1,9 +1,10 @@
 import React from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Blogs from '../Blogs/Blogs';
 import './Banner.css'
 
 const Banner = () => {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     return (
         <div>
             <div className="banner-container flex flex-col items-center justify-center">
@@ -23,19 +24,23 @@ const Banner = () => {
                 </div>
             </div>
 
-            <div className="flex gap-5 mt-10 justify-center">
-            <button onClick={() => navigate(`/dinner`)}>Dinner</button>
+            <div className="flex gap-5 mt-10 justify-center tabs">
+                <button className="btn btn-outline btn-primary" onClick={() => navigate(`/dinner`)}>Dinner</button>
 
-            <button onClick={() => navigate(`/breakfast`)}>Breakfast</button>
-            
-            <button onClick={() => navigate(`/lunch`)}>Lunch</button>
-           
+                <button className="btn btn-outline btn-primary" onClick={() => navigate(`/breakfast`)}>Breakfast</button>
+
+                <button className="btn btn-outline btn-primary" onClick={() => navigate(`/lunch`)}>Lunch</button>
             </div>
-
 
             <div>
                 <Outlet />
             </div>
+
+            <button className="btn btn-active btn-ghost mt-8">Choose your food</button>
+
+
+         <Blogs />
+
         </div>
 
     );

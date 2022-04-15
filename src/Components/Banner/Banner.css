@@ -8,7 +8,9 @@
     height: 100vh;
     background-image: url("/src/Components/images/bannerbackground.png");
     background-repeat: no-repeat;
+    
     background-size: cover;
+    
 }
 
 @media screen and (max-width: 688px) {
