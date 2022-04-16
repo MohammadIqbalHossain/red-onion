@@ -8,6 +8,7 @@ import SignUp from './Components/Signup/SignUp';
 import Lunch from './Components/Foods/Lunch/Lunch';
 import Breakfast from './Components/Foods/Breakfast/Breakfast';
 import Dinner from './Components/Foods/Dinner/Dinner';
+import RequireAuth from './Components/RequireAuth/RequireAuth';
 
 function App() {
   return (
@@ -20,7 +21,11 @@ function App() {
           <Route path='/dinner' element={<Dinner />}></Route>
         </Route>
 
-        <Route path='/banner' element={<Banner />}></Route>
+        <Route path='/banner' element={
+          <RequireAuth>
+            <Banner />
+          </RequireAuth>
+        }></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<SignUp />}></Route>
       </Routes>

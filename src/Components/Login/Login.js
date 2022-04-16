@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Login.css';
 import avatar from '../images/login/avatar.svg'
 import wave from "../images/login/wave.png"
@@ -7,6 +7,9 @@ import { FaUserAlt } from 'react-icons/fa';
 import { AiFillLock } from 'react-icons/ai';
 import auth from '../../firebase.init';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
@@ -20,14 +23,14 @@ const Login = () => {
         emailError: "",
         passwordError: "",
         general: ""
-        
+
     })
 
     console.log(userInfo.email)
     console.log(errors.emailError);
     console.log(errors);
 
-    
+
 
     const [
         signInWithEmailAndPassword,
@@ -35,41 +38,64 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    console.log(error);
 
 
     const handleEmail = e => {
         const emailRegex = /\S+@\S+\.\S+/;
         const validEmail = emailRegex.test(e.target.value);
-        
-        if(validEmail){
-            setUserInfo({...userInfo, email: e.target.value}) 
-            setErrors({...errors, emailError: ""})      
+
+        if (validEmail) {
+            setUserInfo({ ...userInfo, email: e.target.value })
+            setErrors({ ...errors, emailError: "" })
         } else {
-            setErrors({...errors, emailError: "Invalid email"})
-            setUserInfo({...userInfo, email: ""})
+            setErrors({ ...errors, emailError: "Invalid email" })
+            setUserInfo({ ...userInfo, email: "" })
         }
-        
+
     }
+
     console.log(userInfo);
-    
+
     const handlePassword = e => {
         const passRegex = /.{6,}/;
         const validPassword = passRegex.test(e.target.value);
         console.log(validPassword);
-        if(validPassword){
-            setUserInfo({...userInfo, password: e.target.value})
-            setErrors({...errors, passwordError: ""})
-        }else{
-            setErrors({...errors, passwordError: "Password too short"})
-            setUserInfo({...userInfo, password: ""});
+        if (validPassword) {
+            setUserInfo({ ...userInfo, password: e.target.value })
+            setErrors({ ...errors, passwordError: "" })
+        } else {
+            setErrors({ ...errors, passwordError: "Password too short" })
+            setUserInfo({ ...userInfo, password: "" });
         }
-        
 
     }
 
     const handleOnSubmit = e => {
         e.preventDefault();
         signInWithEmailAndPassword(userInfo.email, userInfo.password);
+    }
+
+    useEffect(() => {
+        switch (error?.code) {
+            case "auth/invalid-email":
+                toast("Invalid email")
+                break;
+            case "auth/configuration-not-found":
+                toast("Sign in first")
+                break;
+            default:
+                toast("something is wrong");
+        }
+
+
+    }, [error]);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    let from = location.state?.from?.pathname || "/";
+    if(user){
+        navigate(from, { replace: true });
     }
 
     return (
@@ -95,7 +121,7 @@ const Login = () => {
                                     type="text"
                                     class="input" />
                             </div>
-                            
+
                         </div>
                         {errors?.emailError && <p className="text-red-500 text-xs">{errors.emailError}</p>}
                         <div class="input-div pass">
@@ -114,6 +140,7 @@ const Login = () => {
                         <a href="#">Forgot Password?</a>
                         <input type="submit" class="login-btn" value="Login" />
                     </form>
+                    <ToastContainer />
                 </div>
             </div>
 
