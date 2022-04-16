@@ -96,24 +96,29 @@ const Login = () => {
                 toast("Sign in first or reset password")
                 break;
             default:
-                toast("something is wrong");
+                console.log("This is from login js line:99");
+                break;
         }
 
     }, [error]);
 
+    const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
+    const handleContinueWithGoogle = () => {
+
+        signInWithGoogle()
+        
+    }
+    console.log(googleUser);
+
     const location = useLocation();
     const navigate = useNavigate();
     let from = location.state?.from?.pathname || "/";
-    if (user) {
+    if (user || googleUser) {
         navigate(from, { replace: true });
     }
 
 
-    const [signInWithGoogle, googlUser, googleLoading, googleError] = useSignInWithGoogle(auth);
-    const handleContinueWithGoogle = () => {
-
-        signInWithGoogle()
-    }
+    
 
     return (
         <div className="mb-30">
