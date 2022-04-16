@@ -16,7 +16,8 @@ const SignUp = () => {
 
     const [userInfo, setUserInfo] = useState({
         email: "",
-        password: ""
+        password: "",
+        confirmPassword: "" 
     })
 
     const [errors, setErrors] = useState({
@@ -38,7 +39,7 @@ const SignUp = () => {
         loading,
         error,
       ] = useCreateUserWithEmailAndPassword(auth);
-      
+
     console.log(error);
     console.log(user);
 
@@ -73,6 +74,16 @@ const SignUp = () => {
 
     }
 
+    const handleConfirmPassword = e => {
+        if(e.target.value === userInfo.password){
+            setUserInfo({...userInfo, confirmPassword: e.target.value})
+            setErrors({...errors, passwordError: ""})
+        }else{
+            setErrors({...errors, passwordError: "Passord Mismatched"});
+            setUserInfo({...userInfo, confirmPassword: ""});
+        }
+    }
+
     const handleOnSubmit = e => {
         e.preventDefault();
         createUserWithEmailAndPassword(userInfo.email, userInfo.password);
@@ -80,17 +91,15 @@ const SignUp = () => {
 
     useEffect(() => {
         switch (error?.code) {
-            case "auth/invalid-email":
-                toast("Invalid email")
+            case "auth/email-already-in-use":
+                toast("Your email is already exists")
                 break;
-            case "auth/configuration-not-found":
-                toast("Sign in first")
+            case "auth/insufficient-permission":
+                toast("Please sign in with just one account")
                 break;
             default:
                 toast("something is wrong");
         }
-
-
     }, [error]);
 
     const location = useLocation();
@@ -139,6 +148,21 @@ const SignUp = () => {
                             </div>
                         </div>
                         {errors?.passwordError && <p className="text-red-500 text-xs">{errors.passwordError}</p>}
+
+                        <div class="input-div pass">
+                            <div class="i">
+                                <AiFillLock />
+                            </div>
+                            <div class="div">
+                                <h5>Confirm Password</h5>
+                                <input
+                                    onChange={handleConfirmPassword}
+                                    className="outline-none" type="password"
+                                    class="input" />
+                            </div>
+                        </div>
+                        {errors.passwordError && <p className="text-red-500 text-xs">{errors.passwordError}</p>}
+
                         <a href="#">Forgot Password?</a>
                         <input type="submit" class="login-btn" value="Login" />
                     </form>

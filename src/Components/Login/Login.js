@@ -6,7 +6,7 @@ import bg from '../images/login/bg.svg'
 import { FaUserAlt } from 'react-icons/fa';
 import { AiFillLock } from 'react-icons/ai';
 import auth from '../../firebase.init';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -76,18 +76,25 @@ const Login = () => {
         signInWithEmailAndPassword(userInfo.email, userInfo.password);
     }
 
+
+    const [sendPasswordResetEmail, sending, ResetError] = useSendPasswordResetEmail(auth);
+
+    const handlePasswordReset = async () => {
+        await  sendPasswordResetEmail(userInfo.email);
+        toast("Check your mail");
+    }
+
     useEffect(() => {
         switch (error?.code) {
             case "auth/invalid-email":
                 toast("Invalid email")
                 break;
-            case "auth/configuration-not-found":
-                toast("Sign in first")
+            case "auth/user-not-found":
+                toast("Sign in first or reset password")
                 break;
             default:
                 toast("something is wrong");
         }
-
 
     }, [error]);
 
@@ -137,9 +144,11 @@ const Login = () => {
                             </div>
                         </div>
                         {errors?.passwordError && <p className="text-red-500 text-xs">{errors.passwordError}</p>}
-                        <a href="#">Forgot Password?</a>
+
+                        <a href="#" onClick={handlePasswordReset}>Forgot Password?</a>
                         <input type="submit" class="login-btn" value="Login" />
                     </form>
+                    
                     <ToastContainer />
                 </div>
             </div>
