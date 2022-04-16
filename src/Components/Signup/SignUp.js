@@ -27,9 +27,9 @@ const SignUp = () => {
 
     })
 
-    console.log(userInfo.email)
-    console.log(errors.emailError);
-    console.log(errors);
+    // console.log(userInfo.email)
+    // console.log(errors.emailError);
+    // console.log(errors);
 
 
 
@@ -40,8 +40,8 @@ const SignUp = () => {
         error,
       ] = useCreateUserWithEmailAndPassword(auth);
 
-    console.log(error);
-    console.log(user);
+    // console.log(error);
+    // console.log(user);
 
 
     const handleEmail = e => {
@@ -58,12 +58,11 @@ const SignUp = () => {
 
     }
 
-    console.log(userInfo);
+    // console.log(userInfo);
 
     const handlePassword = e => {
         const passRegex = /.{6,}/;
         const validPassword = passRegex.test(e.target.value);
-        console.log(validPassword);
         if (validPassword) {
             setUserInfo({ ...userInfo, password: e.target.value })
             setErrors({ ...errors, passwordError: "" })
@@ -162,9 +161,13 @@ const SignUp = () => {
                             </div>
                         </div>
                         {errors.passwordError && <p className="text-red-500 text-xs">{errors.passwordError}</p>}
+                        
+                        <input type="submit" class="login-btn" value="Sign Up" />
+                         
+                         <hr />
 
-                        <a href="#">Forgot Password?</a>
-                        <input type="submit" class="login-btn" value="Login" />
+                        
+
                     </form>
                     <ToastContainer />
                 </div>

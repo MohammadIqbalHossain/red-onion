@@ -6,10 +6,13 @@ import bg from '../images/login/bg.svg'
 import { FaUserAlt } from 'react-icons/fa';
 import { AiFillLock } from 'react-icons/ai';
 import auth from '../../firebase.init';
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { BsGoogle } from 'react-icons/bs';
+import { BsGithub } from 'react-icons/bs';
+
 
 
 const Login = () => {
@@ -26,9 +29,9 @@ const Login = () => {
 
     })
 
-    console.log(userInfo.email)
-    console.log(errors.emailError);
-    console.log(errors);
+    // console.log(userInfo.email)
+    // console.log(errors.emailError);
+    // console.log(errors);
 
 
 
@@ -38,7 +41,7 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
-    console.log(error);
+    // console.log(error);
 
 
     const handleEmail = e => {
@@ -55,7 +58,7 @@ const Login = () => {
 
     }
 
-    console.log(userInfo);
+    // console.log(userInfo);
 
     const handlePassword = e => {
         const passRegex = /.{6,}/;
@@ -80,7 +83,7 @@ const Login = () => {
     const [sendPasswordResetEmail, sending, ResetError] = useSendPasswordResetEmail(auth);
 
     const handlePasswordReset = async () => {
-        await  sendPasswordResetEmail(userInfo.email);
+        await sendPasswordResetEmail(userInfo.email);
         toast("Check your mail");
     }
 
@@ -101,8 +104,15 @@ const Login = () => {
     const location = useLocation();
     const navigate = useNavigate();
     let from = location.state?.from?.pathname || "/";
-    if(user){
+    if (user) {
         navigate(from, { replace: true });
+    }
+
+
+    const [signInWithGoogle, googlUser, googleLoading, googleError] = useSignInWithGoogle(auth);
+    const handleContinueWithGoogle = () => {
+
+        signInWithGoogle()
     }
 
     return (
@@ -147,12 +157,30 @@ const Login = () => {
 
                         <a href="#" onClick={handlePasswordReset}>Forgot Password?</a>
                         <input type="submit" class="login-btn" value="Login" />
+
+                        <hr />
+
+                        <div className="felx flex-col justify-center mr-auto">
+                            <button
+                                onClick={handleContinueWithGoogle}
+                                className="flex justify-center items-center border-2 border-green-100 mx-auto py-3 px-8  rounded-3xl hover:bg-green-400 my-4">
+                                <BsGoogle className="mr-4" />
+                                Continue with google
+                            </button>
+                        </div>
+
+                        <div className="felx flex-col justify-center mr-auto">
+                            <button
+                                className="flex justify-center items-center border-2 border-green-100 mx-auto py-3 px-8  rounded-3xl hover:bg-green-400">
+                                <BsGithub className="mr-4" />
+                                Continue with Github
+                            </button>
+                        </div>
                     </form>
-                    
+                    <hr />
                     <ToastContainer />
                 </div>
             </div>
-
         </div>
 
 
